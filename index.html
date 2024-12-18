@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Form Seminar</title>
+    <!-- Link ke Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Custom CSS -->
+    <style>
+        body {
+            background-color: #f4f4f9;
+            padding-top: 50px;
+        }
+        .form-section {
+            margin-bottom: 30px;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            background-color: #ffffff;
+        }
+        .card-header {
+            background-color: #007bff;
+            color: white;
+            font-weight: bold;
+        }
+        .form-control {
+            border-radius: 0.375rem;
+        }
+        .btn-primary {
+            background-color: #007bff;
+        }
+        .btn-primary:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Form Pendaftaran Peserta Seminar -->
+        <div class="form-section">
+            <div class="card">
+                <div class="card-header">
+                    <h4>Form Pendaftaran Peserta Seminar</h4>
+                </div>
+                <div class="card-body">
+                    <form id="registerForm">
+                        <div class="mb-3">
+                            <label for="name" class="form-label">Nama Lengkap</label>
+                            <input type="text" class="form-control" id="name" placeholder="Masukkan nama lengkap" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="email" class="form-label">Email</label>
+                            <input type="email" class="form-control" id="email" placeholder="Masukkan email" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="seminar" class="form-label">Pilih Seminar</label>
+                            <select class="form-select" id="seminar" required>
+                                <option value="" disabled selected>Pilih seminar</option>
+                                <option value="Seminar 1">Seminar 1</option>
+                                <option value="Seminar 2">Seminar 2</option>
+                                <option value="Seminar 3">Seminar 3</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Daftar</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tabel Daftar Peserta -->
+        <div class="form-section">
+            <div class="card">
+                <div class="card-header">
+                    <h4>Daftar Peserta yang Terdaftar</h4>
+                </div>
+                <div class="card-body">
+                    <table class="table table-bordered table-striped">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Nama Lengkap</th>
+                                <th>Email</th>
+                                <th>Seminar</th>
+                            </tr>
+                        </thead>
+                        <tbody id="participantsList">
+                            <!-- Daftar peserta akan tampil di sini -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Form Pembuatan Seminar Baru -->
+        <div class="form-section">
+            <div class="card">
+                <div class="card-header">
+                    <h4>Form Pembuatan Seminar Baru</h4>
+                </div>
+                <div class="card-body">
+                    <form id="createSeminarForm">
+                        <div class="mb-3">
+                            <label for="seminarName" class="form-label">Nama Seminar</label>
+                            <input type="text" class="form-control" id="seminarName" placeholder="Masukkan nama seminar" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="seminarDate" class="form-label">Tanggal Seminar</label>
+                            <input type="date" class="form-control" id="seminarDate" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Buat Seminar</button>
+                    </form>
+                    <div id="seminarResult" class="mt-4"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Script untuk menangani pendaftaran dan pembuatan seminar -->
+    <script>
+        // Array untuk menyimpan data peserta yang mendaftar
+        const participants = [];
+
+        // Fungsi untuk menangani pendaftaran peserta
+        document.getElementById('registerForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const name = document.getElementById('name').value;
+            const email = document.getElementById('email').value;
+            const seminar = document.getElementById('seminar').value;
+
+            // Menambahkan peserta ke dalam array
+            participants.push({ name, email, seminar });
+
+            // Menampilkan daftar peserta dalam tabel
+            displayParticipants();
+
+            // Mengosongkan form setelah pendaftaran
+            document.getElementById('registerForm').reset();
+        });
+
+        // Fungsi untuk menampilkan daftar peserta di tabel
+        function displayParticipants() {
+            const tableBody = document.getElementById('participantsList');
+            tableBody.innerHTML = ''; // Mengosongkan tabel sebelum menambahkan data
+
+            // Menambahkan setiap peserta ke dalam tabel
+            participants.forEach((participant, index) => {
+                const row = `
+                    <tr>
+                        <td>${index + 1}</td>
+                        <td>${participant.name}</td>
+                        <td>${participant.email}</td>
+                        <td>${participant.seminar}</td>
+                    </tr>
+                `;
+                tableBody.innerHTML += row;
+            });
+        }
+
+        // Fungsi untuk menangani pembuatan seminar baru
+        document.getElementById('createSeminarForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const seminarName = document.getElementById('seminarName').value;
+            const seminarDate = document.getElementById('seminarDate').value;
+            
+            const result = `
+                <h5>Seminar Baru Dibuat:</h5>
+                <p><strong>Nama Seminar:</strong> ${seminarName}</p>
+                <p><strong>Tanggal Seminar:</strong> ${seminarDate}</p>
+            `;
+            document.getElementById('seminarResult').innerHTML = result;
+        });
+    </script>
+
+    <!-- Link ke Bootstrap JS dan dependensi -->
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js"></script>
+</body>
+</html>
